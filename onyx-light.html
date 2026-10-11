@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onyx Light — Berlemont Design</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --fg: #0a0a0a;
+      --muted: #888;
+      --border: #e8e8e8;
+      --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 48px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+
+    header.scrolled { border-color: var(--border); }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--fg);
+    }
+
+    .logo img {
+      height: 48px;
+      width: auto;
+      display: block;
+    }
+
+    .logo span {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-left: 14px;
+    }
+
+    nav a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      margin-left: 32px;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--fg); }
+
+    /* ─── PROJECT HEADER ─── */
+    .project-intro {
+      padding: 160px 48px 80px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      gap: 48px;
+    }
+
+    .project-intro h1 {
+      font-size: clamp(40px, 6vw, 80px);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+    }
+
+    .project-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .meta-label {
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      color: var(--fg);
+    }
+
+    /* ─── GALLERY ─── */
+    .gallery {
+      padding: 80px 48px 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .gallery-full {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .gallery-full img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .gallery-full img:hover { transform: scale(1.01); }
+
+    .gallery-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+      gap: 2px;
+    }
+
+    .gallery-split .split-left {
+      grid-row: 1 / 3;
+      overflow: hidden;
+    }
+
+    .gallery-split .split-left img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .gallery-split .split-right {
+      overflow: hidden;
+    }
+
+    .gallery-split .split-right img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .gallery-split img:hover { transform: scale(1.01); }
+
+    /* ─── BACK ─── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 40px 48px;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      border-top: 1px solid var(--border);
+      width: 100%;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--fg); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    footer span { font-size: 12px; color: var(--muted); }
+
+    footer a {
+      font-size: 12px;
+      color: var(--fg);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+      transition: border-color 0.2s;
+    }
+    footer a:hover { border-color: var(--fg); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      header { padding: 14px 24px; }
+      nav a { margin-left: 20px; }
+      .project-intro { grid-template-columns: 1fr; padding: 120px 24px 60px; }
+      .gallery { padding: 40px 24px 80px; }
+      .gallery-duo { grid-template-columns: 1fr; }
+      .gallery-full img, .gallery-duo img { height: 50vw; min-height: 240px; }
+      .back-link { padding: 32px 24px; }
+      footer { padding: 32px 24px; flex-direction: column; gap: 12px; align-items: flex-start; }
+    }
+
+    /* ─── TABLET (≤1024px) ─── */
+    @media (max-width: 1024px) {
+      .project-intro { padding: 140px 32px 60px; gap: 32px; }
+      .gallery { padding: 48px 32px 80px; }
+      .back-link { padding: 32px 32px; }
+    }
+
+    /* ─── MOBILE (≤768px) ─── */
+    @media (max-width: 768px) {
+      header { padding: 12px 20px; }
+      header .logo span { display: none; }
+      nav a { margin-left: 16px; font-size: 12px; }
+
+      .project-intro {
+        grid-template-columns: 1fr;
+        padding: 100px 20px 40px;
+        gap: 28px;
+      }
+      .project-intro h1 { font-size: clamp(32px, 10vw, 56px); }
+
+      .gallery { padding: 24px 0 60px; gap: 2px; }
+
+      .gallery-full img { height: 55vw; min-height: 200px; }
+      .gallery-duo { grid-template-columns: 1fr 1fr; }
+      .gallery-duo img { height: 42vw; min-height: 160px; }
+      .gallery-duo-auto img { width: 100%; }
+      .gallery-full-auto img { width: 100%; }
+
+      section[style*="padding: 64px 48px"] { padding: 36px 20px !important; }
+      section[style*="padding: 48px 48px"] { padding: 28px 20px !important; }
+
+      .back-link { padding: 28px 20px; }
+      footer { padding: 28px 20px; flex-direction: column; gap: 10px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header">
+    <a class="logo" href="index.html">
+      <img src="assets/brand/logo.png" alt="Berlemont Design">
+      <span>Nathan Berlemont Design</span>
+    </a>
+    <nav>
+      <a href="index.html#projets">Projets</a>
+      <a href="mailto:nath.berle@icloud.com">Contact</a>
+    </nav>
+  </header>
+
+  <!-- PROJECT INTRO -->
+  <section class="project-intro">
+    <h1>Onyx<br>Light</h1>
+    <div class="project-meta">
+      <div class="meta-row">
+        <span class="meta-label">Type</span>
+        <span class="meta-value">Lampe</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Année</span>
+        <span class="meta-value">2026</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Matériaux</span>
+        <span class="meta-value">Aluminium brossé, verre opale</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESCRIPTION -->
+  <section style="padding: 64px 48px; border-bottom: 1px solid var(--border); max-width: 720px;">
+    <p style="font-size: 14px; line-height: 1.9; color: var(--fg);">Conçue autour de trois composants — un accumulateur, une ampoule et une batterie externe — cette lampe intègre ses éléments techniques comme autant de contraintes formelles. Le design s'organise pour les accueillir avec cohérence, sans les dissimuler. L'esthétique choisie est brute et minimaliste : rien de superflu, chaque forme répond à une fonction.</p>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery">
+    <div class="gallery-split">
+      <div class="split-left">
+        <img src="assets/projets/onyx-light/lampe-jour.png" alt="Onyx Light — vue 1">
+      </div>
+      <div class="split-right">
+        <img src="assets/projets/onyx-light/lampe-fin-apres-midi.png" alt="Onyx Light — vue 2">
+      </div>
+      <div class="split-right">
+        <img src="assets/projets/onyx-light/lampe-shoot.png" alt="Onyx Light — vue 3">
+      </div>
+    </div>
+  </section>
+
+  <!-- BACK -->
+  <a class="back-link" href="index.html">← Retour aux projets</a>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2026 Berlemont Design</span>
+    <a href="mailto:nath.berle@icloud.com">nath.berle@icloud.com</a>
+  </footer>
+  <!-- LIGHTBOX -->
+  <div id="lightbox" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.92);cursor:zoom-out;align-items:center;justify-content:center;">
+    <div style="position:relative;display:inline-flex;">
+      <img id="lightbox-img" style="max-width:90vw;max-height:90vh;object-fit:contain;display:block;">
+    </div>
+  </div>
+  <script>
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 10);
+    });
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightbox-img');
+    document.querySelectorAll('.gallery img').forEach(img => {
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', () => {
+        lbImg.src = img.src;
+        lb.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    function closeLb() {
+      lb.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    lb.addEventListener('click', closeLb);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300&display=swap" rel="stylesheet">
+  <title>Berlemont Design</title>
+  <!-- Open Graph -->
+  <meta property="og:title" content="Nathan Berlemont — Design">
+  <meta property="og:description" content="À travers l'objet, l'espace et la matière, je conçois des expériences qui allient artisanat et fonctionnalité.">
+  <meta property="og:image" content="https://nathanberlemont.github.io/assets/projets/onyx-light/lampe-jour.png">
+  <meta property="og:url" content="https://nathanberlemont.github.io/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --fg: #0a0a0a;
+      --muted: #888;
+      --border: #e8e8e8;
+      --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 48px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+
+    header.scrolled { border-color: var(--border); }
+
+    .logo {
+      display: block;
+      text-decoration: none;
+    }
+
+    .logo img {
+      height: 48px;
+      width: auto;
+      display: block;
+    }
+
+    nav a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      margin-left: 32px;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--fg); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 48px 80px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-image-wrap {
+      flex: 1;
+      position: relative;
+      padding: 100px 0 48px;
+      overflow: hidden;
+    }
+
+    .slideshow {
+      position: relative;
+      width: 100%;
+      height: 65vh;
+    }
+
+    .slideshow img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    .slideshow img.active {
+      opacity: 1;
+    }
+
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-family: 'Barlow Condensed', 'Helvetica Neue', sans-serif;
+      font-size: 45px;
+      text-align: left;
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      max-width: 1000px;
+    }
+
+    /* ─── CONTACT ─── */
+    .contact {
+      padding: 80px 48px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .contact-header {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+
+    .contact-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .contact-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+      font-size: 15px;
+    }
+
+    .contact-row:last-child { border-bottom: 1px solid var(--border); }
+
+    .contact-label {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .contact-value {
+      color: var(--fg);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .contact-value:hover { color: var(--muted); }
+
+    /* ─── SECTION TITLE ─── */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 64px 48px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header h2 {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-header span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ─── PROJECTS ─── */
+    .projects { padding: 0 0 120px; }
+
+    .project {
+      display: grid;
+      grid-template-columns: 1fr 220px 200px;
+      align-items: center;
+      padding: 32px 48px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .project:hover { background: #f8f8f8; }
+
+    .project:hover .project-arrow {
+      transform: translateX(6px);
+      opacity: 1;
+    }
+
+    .project-num {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+
+    .project-title {
+      font-size: clamp(24px, 3vw, 42px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .project-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .tag {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+
+    .project-year {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .project-arrow {
+      font-size: 18px;
+      opacity: 0.3;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .project-thumb {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 140px;
+    }
+
+    .project-thumb img {
+      max-height: 140px;
+      max-width: 100%;
+      width: auto;
+      object-fit: contain;
+      filter: grayscale(100%);
+      opacity: 0.75;
+      transition: opacity 0.2s;
+    }
+
+    .project:hover .project-thumb img { opacity: 1; }
+
+    /* ─── ABOUT ─── */
+    .about {
+      padding: 80px 48px 80px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .about-photo img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: auto;
+      object-fit: contain;
+      display: block;
+      filter: grayscale(100%);
+    }
+
+    .about-text {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-top: 8px;
+    }
+
+    .about-name {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-text p {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--fg);
+    }
+
+    @media (max-width: 768px) {
+      .about { padding: 60px 24px; }
+      .about-inner { grid-template-columns: 1fr; gap: 40px; }
+      .about-photo img { aspect-ratio: auto; }
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    footer span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    footer a {
+      font-size: 12px;
+      color: var(--fg);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+      transition: border-color 0.2s;
+    }
+    footer a:hover { border-color: var(--fg); }
+
+    /* ─── PROJECTS-DEV WRAPPER ─── */
+    .projects-dev-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      align-items: start;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── TABLET (≤1100px) ─── */
+    @media (max-width: 1100px) {
+      .projects-dev-wrapper { grid-template-columns: 1fr 150px; }
+      .project { grid-template-columns: 1fr 160px 150px; padding: 28px 32px; }
+      .section-header { padding: 48px 32px 32px; }
+    }
+
+    /* ─── MOBILE (≤768px) ─── */
+    @media (max-width: 768px) {
+      header { padding: 14px 20px; }
+      header .logo span { display: none; }
+      nav a { margin-left: 16px; font-size: 12px; }
+
+      .hero { padding: 0 20px 48px; }
+      .slideshow { height: 45vh; }
+      .hero h1 { font-size: 22px; }
+
+      .projects-dev-wrapper { grid-template-columns: 1fr; }
+      #developpement { display: none; }
+
+      .section-header { padding: 36px 20px 24px; }
+
+      .project {
+        grid-template-columns: 1fr 64px 64px;
+        align-items: center;
+        padding: 20px;
+        gap: 0;
+      }
+      .project-thumb { height: 64px; }
+      .project-thumb img { max-height: 64px; }
+      .project-title { font-size: clamp(18px, 5vw, 28px); }
+      .project-right {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+      }
+      .project-tags { display: none; }
+
+      .about { padding: 48px 20px; }
+      .about-inner { grid-template-columns: 1fr; gap: 32px; }
+      .about-photo img { aspect-ratio: auto; }
+
+      .contact { padding: 48px 20px; }
+
+      footer { padding: 28px 20px; flex-direction: column; gap: 10px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header">
+    <a class="logo" href="#">
+      <img src="assets/brand/logo.png" alt="Berlemont Design">
+      <span style="font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-left:14px;color:#0a0a0a;">Nathan Berlemont Design</span>
+    </a>
+    <nav>
+      <a href="#projets">Projets</a>
+      <a href="developpement.html">Développement</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-image-wrap">
+      <div class="slideshow">
+        <img src="assets/projets/onyx-light/lampe-jour.png" alt="Onyx Light" class="active">
+        <img src="assets/projets/flat-pack/flat-pack-1.png" alt="Flat/Pack">
+        <img src="assets/projets/steelaro/steelaro-hero.png" alt="Steelaro">
+        <img src="assets/projets/echo/echo-new1.png" alt="Echo" style="object-position: center 70%">
+        <img src="assets/projets/perfora/perfora-4026.jpg" alt="Perfora">
+        <img src="assets/projets/ekomod/ekomod-1.png" alt="Ekomod">
+        <img src="assets/projets/modulo/photo-modulo-1.png" alt="Modulo">
+      </div>
+    </div>
+    <p class="hero-label">Ma vision</p>
+    <h1>À travers l'objet, l'espace et la matière, je conçois des expériences qui allient artisanat et fonctionnalité.</h1>
+  </section>
+
+  <!-- PROJECTS + DÉVELOPPEMENT -->
+  <div class="projects-dev-wrapper">
+
+  <section class="projects" id="projets" style="border-right:1px solid var(--border);padding-bottom:0;margin:0;">
+
+    <div class="section-header">
+      <h2>Projets</h2>
+    </div>
+
+    <a class="project" href="perfora.html">
+      <div class="project-left">
+        <p class="project-num">01</p>
+        <h3 class="project-title">Perfora</h3>
+      </div>
+      <div class="project-thumb">
+        <img src="assets/projets/perfora/perfora-vignette.png" alt="Perfora">
+      </div>
+      <div class="project-right">
+        <div class="project-tags">
+          <span class="tag">Table</span>
+        </div>
+        <span class="project-year">2023</span>
+        <span class="project-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="project" href="ekomod.html">
+      <div class="project-left">
+        <p class="project-num">02</p>
+        <h3 class="project-title">Ekomod</h3>
+      </div>
+      <div class="project-thumb">
+        <img src="assets/projets/ekomod/ekomod-bibliotheque.png" alt="Ekomod">
+      </div>
+      <div class="project-right">
+        <div class="project-tags">
+          <span class="tag">Étagère</span>
+        </div>
+        <span class="project-year">2024</span>
+        <span class="project-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="project" href="miroir-noir.html">
+      <div class="project-left">
+        <p class="project-num">03</p>
+        <h3 class="project-title">Miroir Noir</h3>
+      </div>
+      <div class="project-thumb">
+        <img src="assets/projets/miroir-noir/miroir-noir-logo.png" alt="Miroir Noir">
+      </div>
+      <div class="project-right">
+        <div class="project-tags">
+          <span class="tag">Aménagement</span>
+        </div>
+        <span class="project-year">2024</span>
+        <span class="project-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="project" href="ondea.html">
+      <div class="project-left">
+        <p class="project-num">04</p>
+        <h3 class="project-title">Ondea</h3>
+      </div>
+      <div class="project-thumb">
+        <img src="assets/projets/ondea/ondea-logo.png" alt="Ondéa">
+      </div>
+      <div class="project-right">
+        <div class="project-tags">
+          <span class="tag">Aménagement</span>
+        </div>
+        <span class="project-year">2025</span>
+        <span class="project-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="project" href="the-node.html">
+      <div class="project-left">
+        <p class="project-num">05</p>
+        <h3 class="project-title">The Node</h3>
+      </div>
+      <div class="project-thumb">
+        <img src="assets/projets/the-node/the-node-logo.png" alt="The Node">
+      </div>
+      <div class="project-right">
+        <div class="project-tags">
+          <span class="tag">Aménagement</span>
+        </div>
+        <span class="project-year">2025</span>
+        <span class="project-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="project" href="echo.html">
+      <div class="project-left">
+        <p class="project-num">06</p>
+        <h3 class="project-title">Echo</h3>
+      </div>
+      <div class="project-thumb">
+        <img src="assets/projets/echo/tirant.png" alt="Echo">
+      </div>
+      <div class="project-right">
+        <div class="project-tags">
+          <span class="tag">Tirant</span>
+        </div>
+        <span class="project-year">2025</span>
+        <span class="project-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="project" href="onyx-light.html">
+      <div class="project-left">
+        <p class="project-num">07</p>
+        <h3 class="project-title">Onyx Light</h3>
+      </div>
+      <div class="project-thumb">
+        <img src="assets/projets/onyx-light/lampe.png" alt="Onyx Light">
+      </div>
+      <div class="project-right">
+        <div class="project-tags">
+          <span class="tag">Design objet</span>
+        </div>
+        <span class="project-year">2026</span>
+        <span class="project-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="project" href="flat-pack.html">
+      <div class="project-left">
+        <p class="project-num">08</p>
+        <h3 class="project-title">Flat/Pack</h3>
+      </div>
+      <div class="project-thumb">
+        <img src="assets/projets/flat-pack/table-osb.png" alt="Flat/Pack">
+      </div>
+      <div class="project-right">
+        <div class="project-tags">
+          <span class="tag">Table</span>
+        </div>
+        <span class="project-year">2026</span>
+        <span class="project-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="project" href="steelaro.html">
+      <div class="project-left">
+        <p class="project-num">09</p>
+        <h3 class="project-title">Steelaro</h3>
+      </div>
+      <div class="project-thumb">
+        <img src="assets/projets/steelaro/steelaro.png" alt="Steelaro">
+      </div>
+      <div class="project-right">
+        <div class="project-tags">
+          <span class="tag">Assise</span>
+        </div>
+        <span class="project-year">2026</span>
+        <span class="project-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="project" href="modulo.html">
+      <div class="project-left">
+        <p class="project-num">10</p>
+        <h3 class="project-title">Modulo</h3>
+      </div>
+      <div class="project-thumb">
+        <img src="assets/projets/modulo/modulo-logo.png" alt="Modulo">
+      </div>
+      <div class="project-right">
+        <div class="project-tags">
+          <span class="tag">Rangement</span>
+        </div>
+        <span class="project-year">2026</span>
+        <span class="project-arrow">→</span>
+      </div>
+    </a>
+
+  </section>
+
+  <!-- DEV PANEL -->
+  <a href="developpement.html" id="developpement" style="display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-decoration:none;color:inherit;position:sticky;top:0;height:100vh;background:#fff;padding:0 40px;gap:16px;transition:background 0.2s;" onmouseover="this.style.background='#f8f8f8'" onmouseout="this.style.background='#fff'">
+    <p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Board</p>
+    <h2 style="font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;">Développement</h2>
+    <p style="font-size:11px;color:var(--muted);letter-spacing:0.04em;">64 planches · Croquis & recherche</p>
+    <span style="font-size:20px;color:var(--muted);margin-top:8px;">→</span>
+  </a>
+
+  </div><!-- end grid -->
+
+  <!-- MOBILE DEV LINK -->
+  <a href="developpement.html" style="display:none;padding:24px 20px;font-size:13px;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--border);width:100%;letter-spacing:0.04em;" class="mobile-dev-link">Board Développement →</a>
+  <style>@media(max-width:768px){.mobile-dev-link{display:block!important;}}</style>
+
+  <!-- NATHAN BERLEMONT -->
+  <section class="about" id="nathan-berlemont">
+    <div class="about-inner">
+      <div class="about-photo">
+        <img src="assets/brand/portrait.jpg" alt="Nathan Berlemont">
+      </div>
+      <div class="about-text">
+        <p class="about-name">Nathan Berlemont</p>
+        <p>Né le 11 mars 2002, je suis étudiant en design à l'ESA Saint-Luc de Liège, une école d'enseignement supérieur artistique reconnue pour la qualité de ses formations en arts appliqués et en design.</p>
+        <p>J'ai débuté mon cursus supérieur par trois années de spécialisation en architecture d'intérieur, une discipline qui m'a permis de développer un regard sensible sur l'espace, les usages et les matériaux. Cette formation m'a initié aux fondamentaux du projet spatial — de l'analyse programmatique au dessin technique, en passant par la scénographie et la conception d'ambiances.</p>
+        <p>Fort de cette base solide, j'ai poursuivi mon parcours au sein de la même école en m'orientant vers le design, élargissant ainsi mes compétences vers des problématiques de conception plus larges.</p>
+        <p>Ce double ancrage — entre l'espace et l'objet, entre la technique et la sensibilité formelle — constitue le fil conducteur de ma formation et nourrit une approche du design à la fois rigoureuse et créative.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <p class="contact-header">Contact</p>
+    <div class="contact-rows">
+      <div class="contact-row">
+        <span class="contact-label">Numéro</span>
+        <a class="contact-value" href="tel:0471491784">0471 49 17 84</a>
+      </div>
+      <div class="contact-row">
+        <span class="contact-label">Mail</span>
+        <a class="contact-value" href="mailto:nath.berle@icloud.com">NATH.BERLE@ICLOUD.COM</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2026 Berlemont Design</span>
+    <a href="mailto:nath.berle@icloud.com">nath.berle@icloud.com</a>
+  </footer>
+
+  <!-- TRANSITION OVERLAY -->
+  <div id="transition-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:#fff;">
+    <video id="transition-video" src="assets/brand/transition.mp4" muted playsinline style="width:100%;height:100%;object-fit:contain;display:block;"></video>
+  </div>
+
+  <script>
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    // Slideshow
+    const slides = document.querySelectorAll('.slideshow img');
+    let current = 0;
+    setInterval(() => {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 3500);
+
+    // Transition vidéo sur clic projet
+    const overlay = document.getElementById('transition-overlay');
+    const video = document.getElementById('transition-video');
+
+
+    document.querySelectorAll('a.project').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        sessionStorage.setItem('lastProject', href);
+        overlay.style.display = 'block';
+        video.currentTime = 0;
+        video.play();
+        video.onended = () => { window.location.href = href; };
+        // Fallback si la vidéo ne se charge pas
+        setTimeout(() => { window.location.href = href; }, 2200);
+      });
+    });
+
+    // Désactive la restauration de scroll automatique du navigateur
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+    // Cache l'overlay AVANT que le bfcache sauvegarde l'état de la page
+    // Sans ça, le swipe back restaure la page avec l'animation visible
+    window.addEventListener('pagehide', () => {
+      overlay.style.display = 'none';
+      video.pause();
+      video.currentTime = 0;
+    });
+
+    // Au retour (swipe back ou bouton retour), centrer le projet visité
+    window.addEventListener('pageshow', (e) => {
+      overlay.style.display = 'none';
+      video.pause();
+      video.currentTime = 0;
+      const last = sessionStorage.getItem('lastProject');
+      const el = last ? document.querySelector(`a.project[href="${last}"]`) : null;
+      if (el) {
+        // Retour depuis un projet : centrer sur le projet visité
+        const go = () => el.scrollIntoView({ behavior: 'instant', block: 'center' });
+        go();
+        setTimeout(go, 80);
+        setTimeout(go, 200);
+      } else {
+        // Première visite ou navigation directe : haut de page
+        window.scrollTo(0, 0);
+      }
+    });
+  </script>
+
+</body>
+</html>

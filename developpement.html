@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Développement — Berlemont Design</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff; --fg: #0a0a0a; --muted: #888; --border: #e8e8e8;
+      --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 48px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { display: flex; align-items: center; text-decoration: none; color: var(--fg); }
+    .logo img { height: 48px; width: auto; display: block; }
+    .logo span { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-left: 14px; }
+    nav a { font-size: 13px; color: var(--muted); text-decoration: none; letter-spacing: 0.04em; margin-left: 32px; transition: color 0.2s; }
+    nav a:hover { color: var(--fg); }
+
+    .board-label {
+      position: fixed; bottom: 32px; left: 48px; z-index: 200;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+      pointer-events: none;
+    }
+
+    .strip-wrapper {
+      position: fixed;
+      top: 81px; left: 0; right: 0; bottom: 0;
+      overflow: hidden;
+    }
+
+    /* La bande est un conteneur flex horizontal sans gap (géré en JS) */
+    #strip {
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+      position: absolute;
+      top: 0; left: 0;
+      will-change: transform;
+    }
+
+    /* Chaque colonne est un empilement vertical */
+    .col {
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .col img {
+      width: 100%;
+      object-fit: contain;
+      background: var(--bg);
+      display: block;
+      flex-shrink: 0;
+      cursor: zoom-in;
+      transition: opacity 0.3s;
+    }
+    .col img:hover { opacity: 0.88; }
+
+    /* Lightbox */
+    #lightbox {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.92); cursor: zoom-out;
+      align-items: center; justify-content: center;
+    }
+    #lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; display: block; }
+
+    @media (max-width: 768px) {
+      header { padding: 12px 20px; }
+      header .logo span { display: none; }
+      nav a { margin-left: 16px; font-size: 12px; }
+      .board-label { bottom: 16px; left: 20px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="logo" href="index.html">
+      <img src="assets/brand/logo.png" alt="Berlemont Design">
+      <span>Nathan Berlemont Design</span>
+    </a>
+    <nav>
+      <a href="index.html#projets">Projets</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <div class="board-label">Développement — 64 planches</div>
+
+  <div class="strip-wrapper" id="wrapper">
+    <div id="strip"></div>
+  </div>
+
+  <div id="lightbox">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+
+  <script>
+    // [chemin, ratio largeur/hauteur] — ratios pré-calculés pour que chaque image
+    // soit affichée EN ENTIER (aucun recadrage) et que toutes les colonnes
+    // aient exactement la même hauteur (haut et bas parfaitement alignés).
+    const IMAGES = [['assets/dev-board-04/scan-01.jpg',0.6954],['assets/dev-board-04/scan-02.jpg',1.3831],['assets/dev-board-04/scan-03.jpg',1.3947],['assets/dev-board-04/scan-04.jpg',1.387],['assets/dev-board-04/scan-05.jpg',1.3947],['assets/dev-board-04/scan-06.jpg',0.693],['assets/dev-board-04/scan-07.jpg',1.3986],['assets/dev-board-04/scan-08.jpg',1.4903],['assets/dev-board-04/scan-09.jpg',1.4085],['assets/dev-board-04/scan-10.jpg',1.4104],['assets/dev-board-04/scan-11.jpg',1.4925],['assets/dev-board-04/scan-12.jpg',1.4948],['assets/dev-board-04/scan-13.jpg',1.3569],['assets/dev-board-04/scan-14.jpg',1.4265],['assets/dev-board-04/scan-15.jpg',1.3755],['assets/dev-board-04/scan-16.jpg',1.3605],['assets/dev-board-04/scan-17.jpg',1.385],['assets/dev-board-04/scan-18.jpg',0.9058],['assets/dev-board-04/scan-19.jpg',0.7052],['assets/dev-board-04/scan-20.jpg',1.4265],['assets/dev-board-04/scan-21.jpg',1.4164],['assets/dev-board-04/scan-22.jpg',1.2165],['assets/dev-board-04/scan-23.jpg',0.6978],['assets/dev-board-04/scan-24.jpg',0.7057],['assets/dev-board-04/scan-25.jpg',1.6722],['assets/dev-board-04/scan-26.jpg',1.3889],['assets/dev-board-04/scan-27.jpg',1.4065],['assets/dev-board-04/scan-28.jpg',0.6993],['assets/dev-board-04/scan-29.jpg',0.6978],['assets/dev-board-04/scan-30.jpg',1.4225],['assets/dev-board-04/scan-31.jpg',0.7037],['assets/dev-board-04/scan-32.jpg',0.6817],['assets/dev-board-04/scan-33.jpg',0.6935],['assets/dev-board-04/scan-34.jpg',0.6878],['assets/dev-board-04/scan-35.jpg',0.7047],['assets/dev-board-04/scan-36.jpg',0.7037],['assets/dev-board-04/scan-37.jpg',0.7491],['assets/dev-board-04/scan-38.jpg',1.3141],['assets/dev-board-04/scan-39.jpg',1.5175],['assets/dev-board-04/scan-40.jpg',1.5019],['assets/dev-board-04/scan-41.jpg',1.6854],['assets/dev-board-04/scan-42.jpg',1.7937],['assets/dev-board-04/scan-43.jpg',1.5019],['assets/dev-board-04/scan-44.jpg',1.4769],['assets/dev-board-04/scan-45.jpg',1.4303],['assets/dev-board-04/scan-46.jpg',1.6227],['assets/dev-board-04/scan-47.jpg',1.4235],['assets/dev-board-04/scan-48.jpg',0.9625],['assets/dev-board-04/scan-49.jpg',0.61],['assets/dev-board-04/scan-50.jpg',1.0899],['assets/dev-board-04/scan-51.jpg',1.4134],['assets/dev-board-04/scan-52.jpg',1.3498],['assets/dev-board-04/scan-53.jpg',0.75],['assets/dev-board-04/scan-54.jpg',1.3582],['assets/dev-board-04/scan-55.jpg',1.3333],['assets/dev-board-04/scan-56.jpg',0.75],['assets/dev-board-04/scan-57.jpg',0.75],['assets/dev-board-04/scan-58.jpg',1.3333],['assets/dev-board-04/scan-59.jpg',0.7121],['assets/dev-board-04/scan-60.jpg',0.6954],['assets/dev-board-04/scan-61.jpg',1.444],['assets/dev-board-04/scan-62.jpg',1.4252],['assets/dev-board-04/scan-63.jpg',1.3333],['assets/dev-board-04/scan-64.jpg',1.5335]];
+
+    const strip   = document.getElementById('strip');
+    const lb      = document.getElementById('lightbox');
+    const lbImg   = document.getElementById('lightbox-img');
+
+    const GAP        = 11;   // ≈ 3mm entre photos
+    const SPEED      = 0.45; // px/frame
+    const containerH = window.innerHeight - 81;
+    const TARGET_W   = Math.max(150, Math.min(300, containerH * 0.34)); // largeur de colonne visée
+    const MAX_W      = TARGET_W * 1.7;                                  // au-delà : on fusionne
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // Largeur de colonne pour que les images empilées (à leur ratio réel) remplissent exactement la hauteur
+    function colWidth(batch) {
+      const sumInv = batch.reduce((s, im) => s + 1 / im[1], 0);
+      return (containerH - (batch.length - 1) * GAP) / sumInv;
+    }
+
+    // Remplit les colonnes une à une jusqu'à approcher la largeur visée
+    function computeLayout(images) {
+      const pool = shuffle(images);
+      const cols = [];
+      let batch = [];
+      pool.forEach(im => {
+        batch.push(im);
+        if (batch.length >= 2 && colWidth(batch) <= TARGET_W) {
+          cols.push(batch);
+          batch = [];
+        }
+      });
+      if (batch.length) {
+        // Reste : on le rattache à la dernière colonne s'il serait trop large seul
+        if (cols.length && (batch.length < 2 || colWidth(batch) > MAX_W)) {
+          cols[cols.length - 1] = cols[cols.length - 1].concat(batch);
+        } else {
+          cols.push(batch);
+        }
+      }
+      return cols.map(b => ({ items: b, colW: colWidth(b) }));
+    }
+
+    function renderLayout(layout, openLb) {
+      let setW = 0;
+      layout.forEach(({ items, colW }) => {
+        const col = document.createElement('div');
+        col.className = 'col';
+        col.style.width       = colW + 'px';
+        col.style.gap         = GAP + 'px';
+        col.style.marginRight = GAP + 'px';
+        col.style.height      = containerH + 'px';
+
+        items.forEach(([src, ratio]) => {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = '';
+          img.style.width  = '100%';
+          img.style.height = (colW / ratio) + 'px';
+          img.addEventListener('click', () => openLb(src));
+          col.appendChild(img);
+        });
+
+        strip.appendChild(col);
+        setW += colW + GAP;
+      });
+      return setW;
+    }
+
+    function openLightbox(src) {
+      lbImg.src = src;
+      lb.style.display = 'flex';
+    }
+
+    // Deux copies identiques pour la boucle infinie
+    const layout   = computeLayout(IMAGES);
+    const setWidth = renderLayout(layout, openLightbox);
+    renderLayout(layout, openLightbox);
+
+    // Défilement droite → gauche, continu (aucune pause au survol)
+    let x = 0;
+    function animate() {
+      x -= SPEED;
+      if (Math.abs(x) >= setWidth) x = 0;
+      strip.style.transform = `translateX(${x}px)`;
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    window.addEventListener('resize', () => location.reload());
+
+    // Lightbox
+    lb.addEventListener('click', () => { lb.style.display = 'none'; lbImg.src = ''; });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { lb.style.display = 'none'; lbImg.src = ''; }
+    });
+  </script>
+
+</body>
+</html>
